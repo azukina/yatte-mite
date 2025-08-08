@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">YATTE MITE!｜日常に小さな“はじめて”を</string>
+    <string name="title_activity_main">YATTE MITE!</string>
+    <string name="package_name">link.dowish.yattemite</string>
+    <string name="custom_url_scheme">link.dowish.yattemite</string>
+</resources>
