@@ -9,8 +9,8 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
+    implementation project(':admob-plus-capacitor')
 
-    implementation "com.google.android.gms:play-services-ads:23.2.0"
 }
 
 

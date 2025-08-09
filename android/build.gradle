@@ -1,7 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+ext {
+    compileSdkVersion = 34
+    targetSdkVersion = 34
+    minSdkVersion = 23
+}
+
 buildscript {
-    
     repositories {
         google()
         mavenCentral()
@@ -9,9 +14,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:8.7.2'
         classpath 'com.google.gms:google-services:4.4.2'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        // ★ 追加：Kotlin Gradle plugin（AGP 8.7.x と相性良い）
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.25'
     }
 }
 
@@ -27,3 +31,31 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
+            project.android {
+                if (!project.android.hasProperty('compileSdkVersion') || project.android.compileSdkVersion == null) {
+                    compileSdkVersion rootProject.ext.compileSdkVersion
+                }
+                if (project.android.hasProperty('defaultConfig')) {
+                    defaultConfig {
+                        if (!minSdkVersion || !minSdkVersion.apiLevel) {
+                            minSdkVersion rootProject.ext.minSdkVersion
+                        }
+                        if (!targetSdkVersion || !targetSdkVersion.apiLevel) {
+                            targetSdkVersion rootProject.ext.targetSdkVersion
+                        }
+                    }
+                }
+                // ★ ここが保険：namespace が無ければ仮で入れる
+                if (!project.android.hasProperty('namespace') || project.android.namespace == null) {
+                    project.android.namespace = "${rootProject.name}.${project.name}".replace('-', '_')
+                }
+            }
+        }
+    }
+}
+

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import loadingMessages from '../utils/loadingMessages';
 import sampleTasks from '../data/sampleTasks';
 
-import { showInterstitial } from '../utils/admob';
+import { showInterstitial, initAdMob } from '../utils/admob';
 
 // ---------------------------------------------
 // 🔧 Task 型（sampleTasks の構造に合わせて定義）
@@ -23,6 +23,9 @@ category: string[];
 // 📘 メインページコンポーネント
 // ---------------------------------------------
 function MainPage() {
+    useEffect(() => {
+        initAdMob(); // ← 起動時に一度だけ
+    }, []);
 
     // --------------------------------
 // 🔧 状態管理（State）
@@ -72,7 +75,7 @@ const startTask = () => {
 // --------------------------------
 const goBack = () => {
     console.log('📢 goBack called');
-    showInterstitial(); // ← ここで広告表示
+    showInterstitial(); // ← クリックで表示だけ
     setIsPlaying(false);
     setTask(null);
 };
