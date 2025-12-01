@@ -3,6 +3,7 @@ import MainPage from './pages/MainPage';
 import FavoriteList from './pages/FavoriteList';
 import TaskDetailPage from './pages/TaskDetailPage';
 import SkippedList from './pages/SkippedList';
+import CameraPage from './pages/CameraPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/favorites" element={<FavoriteList />} />
         <Route path="/task/:id" element={<TaskDetailPage />} />
         <Route path="/skipped" element={<SkippedList />} />
+        <Route path="/camera" element={<CameraPage />} />
       </Routes>
     </Router>
   );

@@ -1,0 +1,39 @@
+.camera-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+}
+
+#camera-container {
+  position: fixed; /* <- ここ重要 */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  background: transparent;
+  pointer-events: none;
+}
+
+.overlay {
+  position: fixed; /* <- 固定 */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.hand-frame {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;  /* ← PCでもスマホでも全画面にフィット */
+  max-height: 100%;
+  z-index: 11;
+}
