@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faTrashAlt, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faTrashAlt, faArrowLeft,faCamera } from "@fortawesome/free-solid-svg-icons";
 import sampleTasks from "../data/sampleTasks";
 
     // ---------------------------------------------
@@ -128,11 +128,12 @@ import sampleTasks from "../data/sampleTasks";
             <FontAwesomeIcon icon={faTrashAlt} />
             </button>
 
-<Link to={`/camera?text=${encodeURIComponent(task.text)}`}>
-  カメラを起動
-</Link>
-
-
+            <button
+            className="action-button camera"
+            onClick={() => navigate(`/camera?text=${encodeURIComponent(task.text)}`)}
+            >
+            <FontAwesomeIcon icon={faCamera} />
+            </button>
         </div>
 
         {/* ✅ 戻るリンク */}

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import '../App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faUserFriends, faStar, faTrashAlt, faRedo } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { faUser, faUserFriends, faStar, faTrashAlt, faRedo, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import loadingMessages from '../utils/loadingMessages';
 import sampleTasks from '../data/sampleTasks';
@@ -27,7 +27,23 @@ function MainPage() {
         initAdMob(); // ← 起動時に一度だけ
     }, []);
 
-    // --------------------------------
+// --------------------------------
+// カメラボタン用
+// --------------------------------
+const navigate = useNavigate();
+
+const location = useLocation();
+
+// カメラから戻ってきた時に、お題表示状態を維持
+useEffect(() => {
+  if (location.state?.fromCamera && location.state?.task) {
+    setTask(location.state.task);       // ← ★ task を復元！
+    setIsPlaying(true);                 // ← ★ お題画面へ復帰
+  }
+}, [location.state]);
+
+
+// --------------------------------
 // 🔧 状態管理（State）
 // --------------------------------
 const [person, setPerson] = useState<'ひとり' | 'ふたり'>('ひとり');
@@ -233,6 +249,20 @@ return (
             </button>
             <button className="action-button skip" onClick={() => setShowConfirm(true)}>
             <FontAwesomeIcon icon={faTrashAlt} />
+            </button>
+            <button
+                className="action-button camera"
+                onClick={() => {
+                    if (!task) return; // ← これで TS エラー消える！
+                    navigate("/camera", {
+                        state: {
+                            fromPlaying: true,
+                            task: task   // ← ★これを追加！
+                        }
+                    });
+                }}
+            >
+                <FontAwesomeIcon icon={faCamera} />
             </button>
             <button className="action-button retry" onClick={goBack}>
             <FontAwesomeIcon icon={faRedo} />

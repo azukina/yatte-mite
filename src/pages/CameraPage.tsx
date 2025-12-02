@@ -1,15 +1,31 @@
 import { useEffect, useRef } from "react";
 import { CameraPreview } from "@capacitor-community/camera-preview";
 import { Filesystem, Directory } from "@capacitor/filesystem";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./CameraPage.css";
-import { useLocation } from "react-router-dom";
 
 const CameraPage = () => {
 
+  const navigate = useNavigate();
   const location = useLocation();
 
-  const query = new URLSearchParams(location.search);
-  const taskText = query.get("text") || "お題";
+  const fromPlaying = location.state?.fromPlaying === true;
+
+  const handleBack = () => {
+    if (fromPlaying) {
+      navigate("/", {
+        state: {
+          fromCamera: true,
+          task: passedTask   // ← ★ これを追加
+        }
+      });
+    } else {
+      navigate(-1);
+    }
+  };
+
+  const passedTask = location.state?.task || null;
+  const taskText = passedTask?.text || "お題";
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -86,6 +102,10 @@ const CameraPage = () => {
 
   return (
     <div className="camera-page">
+
+      <button className="back-button" onClick={handleBack}>
+        ← 戻る
+      </button>
 
       <div id="camera-container"></div>
 

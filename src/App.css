@@ -258,6 +258,9 @@ button:hover {
 .action-button.skip {
   color: #ff6666;
 }
+.action-button.camera {
+  color: #6673ff;
+}
 .action-button.retry {
   color: #333;
 }
