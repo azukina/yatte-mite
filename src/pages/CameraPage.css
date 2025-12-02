@@ -29,11 +29,61 @@
   z-index: 10;
 }
 
+.hand-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  aspect-ratio: 1080 / 2400; /* ← 画像と同じ比率で表示 */
+  z-index: 11;
+}
+
+
 .hand-frame {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 100%;  /* ← PCでもスマホでも全画面にフィット */
-  max-height: 100%;
+  top: 0;
+  left: 0;
+  width: 100vw;    /* 画面幅いっぱい */
+  height: 100vh;   /* 画面高さいっぱい */
+  object-fit: cover; /* ← これが最強 */
   z-index: 11;
+}
+
+.hand-frame {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* ← ここ重要！！ */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 11;
+}
+
+.card-text {
+  position: absolute;
+  top: 71%; /* ← 画像内の相対位置なのでズレない */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 5vw;   /* ← 文字を画面幅に応じて可変にすると綺麗 */
+  color: #333;
+  z-index: 20;
+}
+
+.camera-button {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: white;
+  border: 6px solid #e0e0e0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
