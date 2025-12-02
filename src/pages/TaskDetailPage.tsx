@@ -127,6 +127,12 @@ import sampleTasks from "../data/sampleTasks";
             >
             <FontAwesomeIcon icon={faTrashAlt} />
             </button>
+
+<Link to={`/camera?text=${encodeURIComponent(task.text)}`}>
+  カメラを起動
+</Link>
+
+
         </div>
 
         {/* ✅ 戻るリンク */}

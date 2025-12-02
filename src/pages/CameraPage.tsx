@@ -2,25 +2,34 @@ import { useEffect, useRef } from "react";
 import { CameraPreview } from "@capacitor-community/camera-preview";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import "./CameraPage.css";
+import { useLocation } from "react-router-dom";
 
 const CameraPage = () => {
 
+  const location = useLocation();
+
+  const query = new URLSearchParams(location.search);
+  const taskText = query.get("text") || "お題";
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  useEffect(() => {
-    const startCamera = async () => {
-      await CameraPreview.start({
-        parent: "camera-container",
-        className: "camera-preview",
-        position: "rear",
-        disableAudio: true,
-        toBack: true,
-      });
-    };
+    useEffect(() => {
+      const startCamera = async () => {
+        await CameraPreview.start({
+          parent: "camera-container",
+          className: "camera-preview",
+          position: "rear",
+          disableAudio: true,
+          toBack: true,
+        });
+      };
+      startCamera();
 
-    startCamera();
-    return () => CameraPreview.stop();
-  }, []);
+      // ★ cleanup の中で async は使わず、Promise 返さないようにする
+      return () => {
+        CameraPreview.stop(); // await しなければ Promise を返さない！
+      };
+    }, []);
 
   const handleShot = async () => {
     const result = await CameraPreview.capture({ quality: 90 });
@@ -83,7 +92,7 @@ const CameraPage = () => {
       <div className="overlay">
         <div className="hand-wrapper">
           <img src="/frames/hand.png" className="hand-frame" />
-          <div className="card-text">お題が入る場所</div>
+          <div className="card-text">{taskText}</div>
         </div>
       </div>
 
