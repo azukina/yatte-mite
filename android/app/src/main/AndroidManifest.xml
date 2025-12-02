@@ -43,6 +43,8 @@
         </provider>
     </application>
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <!-- Android 13以上（画像保存） -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 

@@ -30,20 +30,24 @@ const CameraPage = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
-      const startCamera = async () => {
-        await CameraPreview.start({
-          parent: "camera-container",
-          className: "camera-preview",
-          position: "rear",
-          disableAudio: true,
-          toBack: true,
-        });
+      const start = async () => {
+        try {
+          await CameraPreview.start({
+            parent: "camera-container",
+            className: "camera-preview",
+            position: "rear",
+            disableAudio: true,
+            toBack: true,
+          });
+        } catch (e) {
+          console.log("Camera start error:", e);
+        }
       };
-      startCamera();
 
-      // ★ cleanup の中で async は使わず、Promise 返さないようにする
+      start();
+
       return () => {
-        CameraPreview.stop(); // await しなければ Promise を返さない！
+        CameraPreview.stop();
       };
     }, []);
 

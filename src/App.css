@@ -21,6 +21,10 @@ body {
   text-align: center;
 }
 
+html, body, #root {
+  background: transparent !important;
+}
+
 .App {
   position: relative;
   z-index: 0;
