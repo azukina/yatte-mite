@@ -86,13 +86,11 @@ const CameraPage = () => {
     let drawW, drawH, offsetX, offsetY;
 
     if (imgRatio > canvasRatio) {
-      // 横長 → 高さフィット
       drawH = H;
       drawW = H * imgRatio;
       offsetX = (W - drawW) / 2;
       offsetY = 0;
     } else {
-      // 縦長 → 幅フィット
       drawW = W;
       drawH = W / imgRatio;
       offsetX = 0;
@@ -105,19 +103,32 @@ const CameraPage = () => {
     const frame = await loadImage("/frames/hand.png");
     ctx.drawImage(frame, 0, 0, W, H);
 
+    // ---- 撮影中のテキスト位置を取得 ----
+    const textElem = document.querySelector(".card-text") as HTMLElement;
+    const rect = textElem.getBoundingClientRect();
+
+    // ---- 画面→Canvas の比率 ----
+    const scaleX = W / window.innerWidth;
+    const scaleY = H / window.innerHeight;
+
+    // ---- Canvas上の座標に変換 ----
+    const drawX = (rect.left + rect.width / 2) * scaleX;
+    const offsetPx = 4;
+    const drawY = (rect.top + rect.height * 0.6 + offsetPx) * scaleY;
+
     // ---- フォントロード ----
     await document.fonts.load("48px 'Zen Kurenaido'");
+    const fontSize = W * 0.05;
 
-    // ---- テキスト ----
-    ctx.font = "48px 'Zen Kurenaido'";
+    // ---- お題テキスト（撮影時と完全一致）----
+    ctx.font = `${fontSize}px 'Zen Kurenaido'`;
     ctx.fillStyle = "#333";
     ctx.textAlign = "center";
-    ctx.fillText(taskText, W / 2, 1800);
+    ctx.fillText(taskText, drawX, drawY);
 
     const mergedBase64 = canvas.toDataURL("image/jpeg", 0.9);
     const fileName = `yatemite_${Date.now()}.jpg`;
 
-    // ----- ★ ONLY ONE: ギャラリーへ保存 -----
     const resultUri = await saveToGallery(mergedBase64, fileName);
     console.log("Saved to gallery:", resultUri);
 

@@ -89,7 +89,7 @@
 
 .back-button {
   position: absolute;
-  top: 24px;
+  top: 40px;
   left: 10px;
   z-index: 99;
   background: rgba(0, 0, 0, 0.4); /* ← 半透明黒の丸背景でカメラでも見やすい */
