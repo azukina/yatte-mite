@@ -3,6 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="link.dowish.yattemite">
 
+    <!-- 📌 AdMob に必須の広告ID権限 -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Android 13以上（画像保存） -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+
+    <!-- Android 12以下の互換性のため -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,11 +24,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- ✔ AdMob 本番 App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"
+            android:value="ca-app-pub-6071977878506740~4428019889"
             tools:replace="android:value" />
-        <!-- ↑これはテスト用App IDです（本番用はAdMob管理画面で取得） -->
 
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
@@ -42,15 +55,5 @@
                 android:resource="@xml/file_paths"/>
         </provider>
     </application>
-
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- Android 13以上（画像保存） -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
-
-    <!-- Android 12以下の互換性のため -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
 
 </manifest>

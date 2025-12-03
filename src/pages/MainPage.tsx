@@ -217,7 +217,7 @@ return (
 
         {/* 🚀 スタート */}
         <button className="ready-btn" onClick={startTask}>
-            Are you ready?
+            スタート
         </button>
 
         {/* ⭐ お気に入りリンク */}

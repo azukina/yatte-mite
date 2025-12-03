@@ -19,7 +19,7 @@ export const initAdMob = () => {
       await AdMobPlus.start();
 
       interstitial = new InterstitialAd({
-        adUnitId: 'ca-app-pub-3940256099942544/1033173712', // テストID
+        adUnitId: 'ca-app-pub-6071977878506740~4428019889', // 本番ID
       });
 
       if (!listenersBound) {
