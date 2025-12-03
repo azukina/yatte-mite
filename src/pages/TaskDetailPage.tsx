@@ -130,7 +130,14 @@ import sampleTasks from "../data/sampleTasks";
 
             <button
             className="action-button camera"
-            onClick={() => navigate(`/camera?text=${encodeURIComponent(task.text)}`)}
+            onClick={() =>
+                navigate("/camera", {
+                    state: {
+                    fromPlaying: false,
+                    task: task
+                    }
+                })
+            }
             >
             <FontAwesomeIcon icon={faCamera} />
             </button>

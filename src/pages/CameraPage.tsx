@@ -9,14 +9,22 @@ const CameraPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // ★ Android 側の GallerySaver を呼ぶための関数
+  const saveToGallery = async (base64: string, fileName: string) => {
+    const pureBase64 = base64.replace("data:image/jpeg;base64,", "");
+    return await (window as any).GallerySaver.saveImage(pureBase64, fileName);
+  };
+
   const fromPlaying = location.state?.fromPlaying === true;
+  const passedTask = location.state?.task || null;
+  const taskText = passedTask?.text || "お題";
 
   const handleBack = () => {
     if (fromPlaying) {
       navigate("/", {
         state: {
           fromCamera: true,
-          task: passedTask   // ← ★ これを追加
+          task: passedTask
         }
       });
     } else {
@@ -24,32 +32,31 @@ const CameraPage = () => {
     }
   };
 
-  const passedTask = location.state?.task || null;
-  const taskText = passedTask?.text || "お題";
-
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-    useEffect(() => {
-      const start = async () => {
-        try {
-          await CameraPreview.start({
-            parent: "camera-container",
-            className: "camera-preview",
-            position: "rear",
-            disableAudio: true,
-            toBack: true,
-          });
-        } catch (e) {
-          console.log("Camera start error:", e);
-        }
-      };
+  useEffect(() => {
+    console.log("GallerySaver:", (window as any).GallerySaver);
 
-      start();
+    const start = async () => {
+      try {
+        await CameraPreview.start({
+          parent: "camera-container",
+          className: "camera-preview",
+          position: "rear",
+          disableAudio: true,
+          toBack: true,
+        });
+      } catch (e) {
+        console.log("Camera start error:", e);
+      }
+    };
 
-      return () => {
-        CameraPreview.stop();
-      };
-    }, []);
+    start();
+
+    return () => {
+      CameraPreview.stop();
+    };
+  }, []);
 
   const handleShot = async () => {
     const result = await CameraPreview.capture({ quality: 90 });
@@ -61,40 +68,62 @@ const CameraPage = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const W = 1080;  // 手持ちフレームの幅に合わせる
-    const H = 2400;  // 素材が1080×2400ならこれで統一
+    const W = 1080;
+    const H = 2400;
 
     canvas.width = W;
     canvas.height = H;
 
-    // ---- ① 背景（カメラ画像） ----
+    // ---- 背景（比率維持で描画）----
     const bg = await loadImage(base64Camera);
-    ctx.drawImage(bg, 0, 0, W, H);
 
-    // ---- ② hand.png（フレーム） ----
+    const imgW = bg.width;
+    const imgH = bg.height;
+
+    const canvasRatio = W / H;
+    const imgRatio = imgW / imgH;
+
+    let drawW, drawH, offsetX, offsetY;
+
+    if (imgRatio > canvasRatio) {
+      // 横長 → 高さフィット
+      drawH = H;
+      drawW = H * imgRatio;
+      offsetX = (W - drawW) / 2;
+      offsetY = 0;
+    } else {
+      // 縦長 → 幅フィット
+      drawW = W;
+      drawH = W / imgRatio;
+      offsetX = 0;
+      offsetY = (H - drawH) / 2;
+    }
+
+    ctx.drawImage(bg, offsetX, offsetY, drawW, drawH);
+
+    // ---- hand.png ----
     const frame = await loadImage("/frames/hand.png");
     ctx.drawImage(frame, 0, 0, W, H);
 
-    // ---- ③ お題テキスト ----
-    ctx.font = "bold 48px sans-serif";
+    // ---- フォントロード ----
+    await document.fonts.load("48px 'Zen Kurenaido'");
+
+    // ---- テキスト ----
+    ctx.font = "48px 'Zen Kurenaido'";
     ctx.fillStyle = "#333";
     ctx.textAlign = "center";
-    ctx.fillText("お題が入る場所", W / 2, 1800); // ← yellow zone に合わせて調整
+    ctx.fillText(taskText, W / 2, 1800);
 
-    // ---- ④ JPEG化 ----
     const mergedBase64 = canvas.toDataURL("image/jpeg", 0.9);
+    const fileName = `yatemite_${Date.now()}.jpg`;
 
-    // ---- ⑤ Android のギャラリーへ保存 ----
-    await Filesystem.writeFile({
-      path: `yatemite_${Date.now()}.jpg`,
-      data: mergedBase64.replace("data:image/jpeg;base64,", ""),
-      directory: Directory.External,   // ★ Android ギャラリーに出る
-    });
+    // ----- ★ ONLY ONE: ギャラリーへ保存 -----
+    const resultUri = await saveToGallery(mergedBase64, fileName);
+    console.log("Saved to gallery:", resultUri);
 
     alert("保存しました！");
   };
 
-  // 画像読み込みのユーティリティ
   const loadImage = (src: string) => {
     return new Promise<HTMLImageElement>((resolve) => {
       const img = new Image();
