@@ -116,6 +116,9 @@ const CameraPage = () => {
     const offsetPx = 4;
     const drawY = (rect.top + rect.height * 0.6 + offsetPx) * scaleY;
 
+    // 撮影中の配置と同じ比率を使用する（top: 71%）
+    const textY = H * 0.71;
+
     // ---- フォントロード ----
     await document.fonts.load("48px 'Zen Kurenaido'");
     const fontSize = W * 0.05;
@@ -124,7 +127,7 @@ const CameraPage = () => {
     ctx.font = `${fontSize}px 'Zen Kurenaido'`;
     ctx.fillStyle = "#333";
     ctx.textAlign = "center";
-    ctx.fillText(taskText, drawX, drawY);
+    ctx.fillText(taskText, W / 2, textY);
 
     const mergedBase64 = canvas.toDataURL("image/jpeg", 0.9);
     const fileName = `yatemite_${Date.now()}.jpg`;
