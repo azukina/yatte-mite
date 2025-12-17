@@ -59,6 +59,10 @@ const CameraPage = () => {
   }, []);
 
   const handleShot = async () => {
+
+    const TEXT_Y_RATIO = 0.71;
+    const TEXT_FONT_RATIO = 0.05;
+
     const result = await CameraPreview.capture({ quality: 90 });
     const base64Camera = "data:image/jpeg;base64," + result.value;
 
@@ -103,30 +107,17 @@ const CameraPage = () => {
     const frame = await loadImage("/frames/hand.png");
     ctx.drawImage(frame, 0, 0, W, H);
 
-    // ---- 撮影中のテキスト位置を取得 ----
-    const textElem = document.querySelector(".card-text") as HTMLElement;
-    const rect = textElem.getBoundingClientRect();
-
-    // ---- 画面→Canvas の比率 ----
-    const scaleX = W / window.innerWidth;
-    const scaleY = H / window.innerHeight;
-
-    // ---- Canvas上の座標に変換 ----
-    const drawX = (rect.left + rect.width / 2) * scaleX;
-    const offsetPx = 4;
-    const drawY = (rect.top + rect.height * 0.6 + offsetPx) * scaleY;
-
-    // 撮影中の配置と同じ比率を使用する（top: 71%）
-    const textY = H * 0.71;
+    const textY = H * TEXT_Y_RATIO;
 
     // ---- フォントロード ----
     await document.fonts.load("48px 'Zen Kurenaido'");
-    const fontSize = W * 0.05;
+    const fontSize = W * TEXT_FONT_RATIO;
 
     // ---- お題テキスト（撮影時と完全一致）----
     ctx.font = `${fontSize}px 'Zen Kurenaido'`;
     ctx.fillStyle = "#333";
     ctx.textAlign = "center";
+    ctx.textBaseline = "top";
     ctx.fillText(taskText, W / 2, textY);
 
     const mergedBase64 = canvas.toDataURL("image/jpeg", 0.9);
